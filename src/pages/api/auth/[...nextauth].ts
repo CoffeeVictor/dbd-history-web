@@ -3,6 +3,11 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GithubProvider from 'next-auth/providers/github';
 import { UserService } from '../../../services/UserService';
 
+export interface ISessionUser {
+	id: string;
+	username: string;
+}
+
 export default NextAuth({
 	providers: [
 		CredentialsProvider({
