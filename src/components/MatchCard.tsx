@@ -1,4 +1,5 @@
-import { Box, Flex, Image } from "@chakra-ui/react";
+import { Box, Flex } from "@chakra-ui/react";
+import Image from 'next/image';
 import { SurvivorCard } from "./SurvivorCard";
 
 export interface ISurvivorData {
@@ -27,11 +28,11 @@ export const MatchCard: React.FC<IMatchCardProps> = (props) => {
     return (
         <Flex bg={'gray.300'} borderRadius={'md'} alignItems={'center'} justifyContent={'space-evenly'}>
             <Box>
-                <Image src={`/killers/${killer.title}.webp`} alt={killer.title}/>
+                <Image src={`/killers/${killer.title}.webp`} alt={killer.title} width={"58px"} height={"80px"}/>
             </Box>
             {survivors.map(({name, result}, index) => <SurvivorCard key={index} name={name} result={result}/>)}
             <Box>
-                {`${map.realm}:${map.name}`}
+                {`${map.realm}: ${map.name}`}
             </Box>
             <Box>
                 Date: {dateView.toLocaleDateString()}
