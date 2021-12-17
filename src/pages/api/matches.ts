@@ -1,6 +1,6 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/react";
-import { MatchService } from "../../services/MatchService";
+import { IMatchBody, MatchService } from "../../services/MatchService";
 import { ISessionUser } from "./auth/[...nextauth]";
 
 const matchService = new MatchService();
@@ -10,9 +10,19 @@ const handler: NextApiHandler = async (req, res) => {
 
     const user = session?.user as ISessionUser;
 
-    const matches = await matchService.getAllMatches(user.id);
+    if(req.method === 'GET') {
+        const matches = await matchService.getAllMatches(user.id);
 
-    return res.json({matches})
+        return res.json({matches})
+    } else if (req.method === 'POST') {
+        const {match}: {match: IMatchBody} = req.body;
+
+        const newMatch = await matchService.createMatch(match, user.id);
+
+        return res.status(200).json({
+            created: newMatch
+        })
+    }
 }
 
 export default handler;

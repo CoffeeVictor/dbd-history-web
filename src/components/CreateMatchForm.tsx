@@ -1,5 +1,7 @@
-import { Button, Flex, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
 import { Form } from "@unform/web";
+import axios from "axios";
+import { IMatchBody } from "../services/MatchService";
 import { KillerInput } from "./KillerInput";
 import { MapInput } from "./MapInput";
 import { SurvivorInput } from "./SurvivorInput";
@@ -12,12 +14,29 @@ export interface ICreateMatchFormProps {
 export const CreateMatchForm: React.FC<ICreateMatchFormProps> = (props) => {
 
     const {isOpen, onClose} = props;
+    const toast = useToast({
+        isClosable: true,
+        duration: 3000,
+        status: 'error',
+        position: 'top-right',
+    })
+
+    async function handleSubmit(data: IMatchBody) {
+        try {
+            const response = await axios.post('/api/matches', {match: data});
+        } catch(e) {
+            toast({
+                title: 'Match could not be created',
+                description: 'Something went wrong, try again later.'
+            })
+        }
+
+        onClose(true);
+    }
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose}>
-        <Form onSubmit={(data) => {
-            console.log('Form Input Data:', data);
-        }}>
+        <Modal isOpen={isOpen} onClose={() => {onClose(false)}}>
+        <Form onSubmit={handleSubmit}>
             <ModalOverlay />
             <ModalContent>
             <ModalHeader>Add a new Match</ModalHeader>
@@ -49,9 +68,9 @@ export const CreateMatchForm: React.FC<ICreateMatchFormProps> = (props) => {
 
             <ModalFooter>
                 <Button colorScheme='blue' mr={3} type="submit">
-                Save
+                    Save
                 </Button>
-                <Button colorScheme={'red'}>Cancel</Button>
+                <Button colorScheme={'red'} onClick={() => {onClose(false)}}>Cancel</Button>
             </ModalFooter>
             </ModalContent>
         </Form>

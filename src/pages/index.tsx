@@ -25,8 +25,6 @@ const Dashboard: NextPage = () => {
 
 		const data = result.data;
 
-		console.log('Setting matches as:', data)
-
 		setMatches(data.matches);
 	}
 
@@ -36,7 +34,12 @@ const Dashboard: NextPage = () => {
 
 	return (
 		<>
-			<CreateMatchForm isOpen={isOpen} onClose={onClose} />
+			<CreateMatchForm isOpen={isOpen} onClose={(reload: boolean) => {
+				if(reload) {
+					getMatchesData();
+				}
+				onClose();
+			}} />
 			<Flex w={'100vw'} h={'100vh'} bg={'gray.800'} flexDir={'column'}>
 				<Flex h={'min-content'} justifyContent={'space-between'} p={'2.5'}>
 					<Button colorScheme={'green'} onClick={onOpen}>
@@ -49,9 +52,9 @@ const Dashboard: NextPage = () => {
 					>Logout</Button>
 				</Flex>
 				<Box p={'2.5'}>
-					{matches.length > 0 && matches.map((match, index) => (
+					{matches.length > 0 && matches.map((match) => (
 							<MatchCard 
-								key={index} 
+								key={match.id} 
 								{...match}
 							/>
 						)
