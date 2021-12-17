@@ -8,6 +8,8 @@ export interface ISessionUser {
 	username: string;
 }
 
+const userService = new UserService();
+
 export default NextAuth({
 	providers: [
 		CredentialsProvider({
@@ -31,8 +33,6 @@ export default NextAuth({
 				const password = credentials?.password;
 
 				if(!username || !password) return null;
-
-				const userService = new UserService();
 
 				const user = await userService.authenticate({username, password});
 
