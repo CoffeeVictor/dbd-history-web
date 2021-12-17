@@ -31,9 +31,18 @@ export const MatchCard: React.FC<IMatchCardProps> = (props) => {
     }
 
     return (
-        <Flex bg={'gray.300'} borderRadius={'md'} alignItems={'center'} justifyContent={'space-between'} py={'2'} my={'3'} px={'8'}>
+        <Flex 
+            bg={'gray.300'} 
+            borderRadius={'md'} 
+            alignItems={'center'} 
+            justifyContent={'space-between'} 
+            py={'2'} 
+            my={'3'} 
+            px={'8'}
+            minW={'fit-content'}
+        >
             <Flex w={'60%'} alignItems={'center'} justifyContent={'space-around'}>
-                <Flex align={'center'} justifyContent={'center'}>
+                <Flex align={'center'} justifyContent={'center'} minWidth={'58px'} minHeight={'80px'}>
                     <Image src={`/killers/${killer.title}.webp`} alt={killer.title} width={"58px"} height={"80px"}/>
                 </Flex>
                 {survivors.map(({name, result}, index) => <SurvivorCard key={index} name={name} result={result}/>)}
