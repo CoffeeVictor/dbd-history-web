@@ -4,6 +4,7 @@ import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Loading } from "../components/Loading";
 import { IUserCredentials } from "../services/UserService";
 
 const Login: NextPage = () => {
@@ -12,6 +13,8 @@ const Login: NextPage = () => {
     const {register, handleSubmit} = useForm();
     const [showPassword, setShowPassword] = useState(false);
     const [wrongCredentials, setWrongCredentials] = useState(false);
+
+    if(status === 'loading') return <Loading />;
 
     if(data?.user) router.push('/');
 

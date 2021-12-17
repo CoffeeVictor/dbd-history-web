@@ -1,32 +1,12 @@
 import { Button, Center, Flex, FormControl, FormErrorMessage, FormLabel, Heading, Input, InputGroup, InputRightElement, useToast } from "@chakra-ui/react";
 import axios, { AxiosError } from "axios";
-import { GetServerSideProps, NextPage } from "next";
-import { getSession, signIn } from "next-auth/react";
+import { NextPage } from "next";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
+import { Loading } from "../components/Loading";
 import { IUserCredentials } from "../services/UserService";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context)
-
-    if(session?.user) {
-        return {
-            redirect: {
-                permanent: false,
-                destination: '/'
-            }
-        }
-    }
-
-    return {
-        props: {}
-    }
-}
-
-function sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
 
 const Register: NextPage = () => {
 
@@ -35,6 +15,11 @@ const Register: NextPage = () => {
     const {register, handleSubmit} = useForm();
     const router = useRouter();
     const toast = useToast({position: 'top-right', duration: 2500})
+    const {data, status} = useSession();
+
+    if(status === 'loading') return <Loading />;
+
+    if(data?.user) router.push('/');
 
     async function registerUser(formData: IUserCredentials) {
 

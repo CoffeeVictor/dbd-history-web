@@ -5,6 +5,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/dist/client/router';
 import { useEffect, useState } from 'react';
 import { CreateMatchForm } from '../components/CreateMatchForm';
+import { Loading } from '../components/Loading';
 import { IMatchCardProps, MatchCard } from '../components/MatchCard';
 
 const Dashboard: NextPage = () => {
@@ -31,6 +32,8 @@ const Dashboard: NextPage = () => {
 	useEffect(() => {
 		getMatchesData();
 	}, [])
+
+	if(status === 'loading') return <Loading />;
 
 	return (
 		<>
