@@ -1,9 +1,10 @@
-import { Button, Flex, FormControl, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
+import { Button, Flex, FormControl, FormHelperText, FormLabel, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay, useToast } from "@chakra-ui/react";
 import { Form } from "@unform/web";
 import axios from "axios";
 import { IMatchBody } from "../services/MatchService";
 import { KillerInput } from "./KillerInput";
 import { MapInput } from "./MapInput";
+import { RoleInput } from "./RoleInput";
 import { SurvivorInput } from "./SurvivorInput";
 
 export interface ICreateMatchFormProps {
@@ -23,7 +24,7 @@ export const CreateMatchForm: React.FC<ICreateMatchFormProps> = (props) => {
 
     async function handleSubmit(data: IMatchBody) {
         try {
-            const response = await axios.post('/api/matches', {match: data});
+            await axios.post('/api/matches', {match: data});
         } catch(e) {
             toast({
                 title: 'Match could not be created',
@@ -45,19 +46,26 @@ export const CreateMatchForm: React.FC<ICreateMatchFormProps> = (props) => {
                     <Flex 
                         flexDir={'column'}
                     >
-                        <FormControl>
+                        <FormControl p={'2'}>
+                            <FormLabel>
+                                Role
+                            </FormLabel>
+                            <RoleInput />
+                            <FormHelperText>Your survivor will always be the first.</FormHelperText>
+                        </FormControl>
+                        <FormControl p={'2'}>
                             <FormLabel>
                                 Killer
                             </FormLabel>
                             <KillerInput />
                         </FormControl>
-                        <FormControl>
+                        <FormControl p={'2'} >
                             <FormLabel>
                                 Survivors
                             </FormLabel>
                             <SurvivorInput />
                         </FormControl>
-                        <FormControl>
+                        <FormControl p={'2'} >
                             <FormLabel>
                                 Map
                             </FormLabel>

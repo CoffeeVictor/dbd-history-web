@@ -59,6 +59,11 @@ const Dashboard: NextPage = () => {
 							<MatchCard 
 								key={match.id} 
 								{...match}
+								deleteCb={(reload) => {
+									if(reload) {
+										getMatchesData();
+									}
+								}}
 							/>
 						)
 					)}

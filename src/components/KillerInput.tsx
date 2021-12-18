@@ -19,7 +19,7 @@ export const KillerInput: React.FC = () => {
                 return {title, name};
             }
         })
-    })
+    }, [registerField])
 
     return (
         <Select 

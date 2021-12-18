@@ -1,15 +1,18 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Flex, useToast } from "@chakra-ui/react";
+import axios from "axios";
 import Image from 'next/image';
 import { SurvivorCard } from "./SurvivorCard";
 
 export interface ISurvivorData {
     name: string;
     result: string;
+    isPlayer: boolean;
 }
 
 export interface IMatchCardProps {
     killer: {
         title: string;
+        isPlayer: boolean;
     }
     map: {
         realm: string;
@@ -18,16 +21,36 @@ export interface IMatchCardProps {
     survivors: ISurvivorData[];
     created_at: Date;
     id: string;
+    deleteCb: (reload: boolean) => void;
 }
 
 export const MatchCard: React.FC<IMatchCardProps> = (props) => {
 
-    const {killer, map, survivors, created_at, id} = props;
-
+    const {killer, map, survivors, created_at, id, deleteCb} = props;
+    const toast = useToast({
+        isClosable: true,
+        duration: 3000,
+        position: 'top-right'
+    });
     const dateView = new Date(created_at);
 
-    function handleDelete(id: string) {
-        console.log('Deleting:', id)
+    async function handleDelete(id: string) {
+        try {
+            await axios.delete(`api/matches/${id}`);
+
+            toast({
+                title: 'Match deleted.',
+                status: 'success'
+            })
+        } catch (e) {
+            toast({
+                title: 'Server error',
+                description: 'Something went wrong with the server.',
+                status: 'error'
+            })
+        } finally {
+            deleteCb(true);
+        }
     }
 
     return (
@@ -36,16 +59,16 @@ export const MatchCard: React.FC<IMatchCardProps> = (props) => {
             borderRadius={'md'} 
             alignItems={'center'} 
             justifyContent={'space-between'} 
-            py={'2'} 
             my={'3'} 
-            px={'8'}
+            py={'1'}
+            pr={'2%'}
             minW={'fit-content'}
         >
             <Flex w={'60%'} alignItems={'center'} justifyContent={'space-around'}>
-                <Flex align={'center'} justifyContent={'center'} minWidth={'58px'} minHeight={'80px'}>
+                <Flex align={'center'} justifyContent={'center'} minWidth={'58px'} minHeight={'80px'} p={'1'} border={'2px'} borderColor={killer.isPlayer ? 'green.600' : 'transparent'} borderRadius={'md'}>
                     <Image src={`/killers/${killer.title}.webp`} alt={killer.title} width={"58px"} height={"80px"}/>
                 </Flex>
-                {survivors.map(({name, result}, index) => <SurvivorCard key={index} name={name} result={result}/>)}
+                {survivors.map(({name, result, isPlayer}, index) => <SurvivorCard key={index} name={name} result={result} isPlayer={isPlayer} />)}
             </Flex>
             <Box w={'25%'}>
                 {`${map.realm}: ${map.name}`}

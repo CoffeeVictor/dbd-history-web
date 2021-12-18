@@ -1,7 +1,7 @@
 import { NextApiHandler } from "next";
 import { getSession } from "next-auth/react";
-import { IMatchBody, MatchService } from "../../services/MatchService";
-import { ISessionUser } from "./auth/[...nextauth]";
+import { IMatchBody, MatchService } from "../../../services/MatchService";
+import { ISessionUser } from "../auth/[...nextauth]";
 
 const matchService = new MatchService();
 

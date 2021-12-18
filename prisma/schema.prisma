@@ -21,13 +21,13 @@ model User {
 
 model Match {
   id         String     @id @default(uuid())
-  killer     Killer
+  killer     Killer     @relation(onDelete: Cascade)
   survivors  Survivor[]
-  map        Map
+  map        Map        @relation(onDelete: Cascade)
   date       DateTime   @default(now())
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt
-  User       User?      @relation(fields: [userId], references: [id])
+  User       User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String?
 }
 
@@ -36,14 +36,16 @@ model Killer {
   title   String
   match   Match? @relation(fields: [matchId], references: [id])
   matchId String?
+  isPlayer Boolean @default(true)
 }
 
 model Survivor {
   id      String @id @default(uuid())
   name    String
   result  String
-  match   Match? @relation(fields: [matchId], references: [id])
+  match   Match? @relation(fields: [matchId], references: [id], onDelete: Cascade)
   matchId String
+  isPlayer Boolean @default(false)
 }
 
 model Map {

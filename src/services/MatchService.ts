@@ -11,6 +11,7 @@ export interface IMatchBody {
         realm: string;
     },
     survivors: ISurvivorData[];
+    role: 'killer' | 'survivor';
 }
 
 export class MatchService {
@@ -23,11 +24,28 @@ export class MatchService {
 
     public async createMatch(matchData: IMatchBody, userId: string) {
 
+        const survivors = matchData.survivors.map((survivor, index) => {
+
+            let newSurvivor: any = {};
+
+            newSurvivor.name = survivor.name;
+            newSurvivor.result = survivor.result;
+
+            if(index === 0 && matchData.role === 'survivor') {
+                newSurvivor.isPlayer = true;
+            } else {
+                newSurvivor.isPlayer = false;
+            }
+
+            return newSurvivor;
+        })
+
         const newMatch = await this.prisma.match.create({
             data: {
                 killer: {
                     create: {
-                        title: matchData.killer.title
+                        title: matchData.killer.title,
+                        isPlayer: matchData.role === 'killer',
                     }
                 },
                 map: {
@@ -38,7 +56,7 @@ export class MatchService {
                 },
                 survivors: {
                     createMany: {
-                        data: matchData.survivors
+                        data: survivors
                     }
                 },
                 User: {
@@ -60,7 +78,8 @@ export class MatchService {
             select: {
                 killer: {
                     select: {
-                        title: true
+                        title: true,
+                        isPlayer: true
                     }
                 },
                 map: {
@@ -72,7 +91,8 @@ export class MatchService {
                 survivors: {
                     select: {
                         name: true,
-                        result: true
+                        result: true,
+                        isPlayer: true
                     }
                 },
                 created_at: true,
@@ -84,5 +104,32 @@ export class MatchService {
         })
 
         return matches;
+    }
+
+    public async deleteMatch(matchId: string, userId: string) {
+        const match = await this.prisma.match.findFirst({
+            where: {
+                id: matchId
+            }
+        })
+
+        if(match?.userId === userId) {
+
+            await this.prisma.killer.delete({
+                where: {
+                    id: match.killerId
+                }
+            })
+
+            await this.prisma.map.delete({
+                where: {
+                    id: match.mapId
+                }
+            })
+
+            return match;
+        }
+
+        return null;
     }
 }
