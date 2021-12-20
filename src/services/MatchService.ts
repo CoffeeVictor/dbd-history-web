@@ -31,7 +31,7 @@ export class MatchService {
             newSurvivor.name = survivor.name;
             newSurvivor.result = survivor.result;
 
-            if(index === 0 && matchData.role === 'survivor') {
+            if(index === 0 && matchData.role.toLowerCase() === 'survivor') {
                 newSurvivor.isPlayer = true;
             } else {
                 newSurvivor.isPlayer = false;
@@ -45,7 +45,7 @@ export class MatchService {
                 killer: {
                     create: {
                         title: matchData.killer.title,
-                        isPlayer: matchData.role === 'killer',
+                        isPlayer: matchData.role.toLowerCase() === 'killer',
                     }
                 },
                 map: {
