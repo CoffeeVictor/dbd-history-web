@@ -70,6 +70,71 @@ export class MatchService {
         return newMatch;
     }
 
+    public async updateMatch(matchId: string, matchData: IMatchBody, userId: string) {
+
+        const match = await this.prisma.match.findFirst({
+            where: {
+                id: matchId
+            }
+        })
+
+        if(match?.userId !== userId) return null;
+
+        const survivors = matchData.survivors.map((survivor, index) => {
+
+            let newSurvivor: any = {};
+
+            newSurvivor.name = survivor.name;
+            newSurvivor.result = survivor.result;
+
+            if(index === 0 && matchData.role.toLowerCase() === 'survivor') {
+                newSurvivor.isPlayer = true;
+            } else {
+                newSurvivor.isPlayer = false;
+            }
+
+            return newSurvivor;
+        })
+
+        const updatedMatch = await this.prisma.match.update({
+            where: {
+                id: matchId
+            },
+            data: {
+                killer: {
+                    create: {
+                        title: matchData.killer.title,
+                        isPlayer: matchData.role.toLowerCase() === 'killer',
+                    }
+                },
+                map: {
+                    create: {
+                        name: matchData.map.map,
+                        realm: matchData.map.realm
+                    }
+                },
+                survivors: {
+                    createMany: {
+                        data: survivors
+                    }
+                },
+                User: {
+                    connect: {
+                        id: userId
+                    }
+                }
+            },
+            select: {
+                id: true,
+                killer: true,
+                map: true,
+                survivors: true
+            }
+        })
+
+        return updatedMatch;
+    }
+
     public async getAllMatches(userId: string) {
         const matches = await this.prisma.match.findMany({
             where: {
