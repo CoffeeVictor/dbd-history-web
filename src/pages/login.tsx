@@ -2,6 +2,7 @@ import { Box, Button, Flex, FormControl, FormErrorMessage, FormLabel, Heading, I
 import { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
+import Head from 'next/head';
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Loading } from "../components/Loading";
@@ -32,6 +33,9 @@ const Login: NextPage = () => {
     }
 
     return (<>
+        <Head>
+            <title>Login</title>
+        </Head>
         <Box bg={'gray.800'} w={'100vw'} height={'100vh'}>
             <Flex
                 alignItems={'center'} 

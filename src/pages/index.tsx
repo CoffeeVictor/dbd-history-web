@@ -3,6 +3,7 @@ import axios from 'axios';
 import type { NextPage } from 'next';
 import { signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/dist/client/router';
+import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import { CreateMatchForm } from '../components/CreateMatchForm';
 import { Loading } from '../components/Loading';
@@ -37,6 +38,9 @@ const Dashboard: NextPage = () => {
 
 	return (
 		<>
+		<Head>
+            <title>DbD Tracker</title>
+        </Head>
 			<CreateMatchForm isOpen={isOpen} onClose={(reload: boolean) => {
 				if(reload) {
 					getMatchesData();

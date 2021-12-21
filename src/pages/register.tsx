@@ -3,6 +3,7 @@ import axios, { AxiosError } from "axios";
 import { NextPage } from "next";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/dist/client/router";
+import Head from 'next/head';
 import { useState } from "react";
 import { useForm } from 'react-hook-form';
 import { Loading } from "../components/Loading";
@@ -56,6 +57,10 @@ const Register: NextPage = () => {
     }
 
     return (
+        <>
+        <Head>
+            <title>Register</title>
+        </Head>
         <Center bg={'gray.800'} w={'100vw'} height={'100vh'}>
             <Flex
                 px={'10'}
@@ -115,6 +120,7 @@ const Register: NextPage = () => {
                 </Flex>
             </Flex>
         </Center>
+        </>
     )
 }
 
