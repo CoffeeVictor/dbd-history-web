@@ -15,7 +15,7 @@ export const SurvivorCard: React.FC<ISurvivorCardProps> = (props) => {
         <Box dir="column">
             <Box p={'1'} border={'2px'} borderColor={isPlayer ? 'green.600' : 'transparent'} borderRadius={'md'}>
                 <Flex bgImage={`url('/survivors/${name}.webp')`} width={"58px"} height={"80px"} justifyContent={'center'} alignItems={'flex-end'}>
-                    <Image src={`/icons/${result}.png`} alt={result} width={"32px"} height={"32px"}/>
+                    <Image src={`/icons/${result}.png`} alt={result} width={"40px"} height={"40px"}/>
                 </Flex>
             </Box>
             {/* <Text>
